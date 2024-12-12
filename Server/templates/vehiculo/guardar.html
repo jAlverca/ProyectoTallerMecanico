@@ -1,0 +1,37 @@
+{% extends "template.html" %}
+{% block content %}
+<h2 class="text-white">Agregar Vehículo</h2>
+<div class="booking-form-body">
+    <a href="/" class="btn btn-info">Volver</a>
+    <form id="form" class="custom-form booking-form" action="/vehicle/save" method="POST" role="form">
+        <div class="booking-form-body">
+            <div class="row">
+                <input type="hidden" id="person" name="person" value="{{ person_id }}">
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="marca">Marca:</label>
+                    <input type="text" id="marca" name="marca" class="form-control" placeholder="Marca" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="modelo">Modelo:</label>
+                    <input type="text" id="modelo" name="modelo" class="form-control" placeholder="Modelo" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="placa">Placa:</label>
+                    <input type="text" id="placa" name="placa" class="form-control" placeholder="Placa" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="color">Color:</label>
+                    <input type="text" id="color" name="color" class="form-control" placeholder="Color" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="descripcion">Descripción:</label>
+                    <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripción" required>
+                </div>
+                <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                    <button id="boton" type="submit" class="form-control btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

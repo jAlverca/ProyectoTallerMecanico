@@ -1,0 +1,63 @@
+{% extends 'template.html' %} 
+{% block content %}
+
+<main class="text-white p-5 my-3">
+    <h1 class="h1 text-center mb-4">Lista de Clientes</h1>
+
+    <div class="container">
+        <div class="d-flex justify-content-between mb-4">
+            <a href="/person/register" class="btn btn-danger">Agregar Clientes</a>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3 mb-4">
+            <div class="d-flex align-items-end">
+                <div class="me-2">
+                    <label for="search-field" class="form-label">Buscar:</label>
+                    <input type="text" id="search-field" class="form-control" placeholder="Buscar..." />
+                </div>
+                <button class="btn btn-primary search-button">Buscar</button>
+            </div>
+        </div>
+
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Direccion</th>
+                    <th>Teléfono</th>
+                    <th>Identificación</th>
+                    <th>Tipo</th>
+                    <th>Proyectos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for valor in lista %}
+                <tr>
+                    <td>{{ valor.nombres }}</td>
+                    <td>{{ valor.apellidos }}</td>
+                    <td>{{ valor.direccion }}</td>
+                    <td>{{ valor.telefono }}</td>
+                    <td>{{ valor.identificacion }}</td>
+                    <td>{{ valor.tipo }}</td>
+                    <td>
+                        <a href="/vehicle/list/{{ valor.id }}" class="btn btn-info">Ver Vehículos</a>
+                    </td>
+                    <td>
+                        <a href="/person/edit/{{ valor.id }}" class="btn btn-info">Modificar</a>
+                    </td>
+                    <td>
+                        <form action="/person/delete/{{ valor.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este inversionista?');">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+
+{% endblock %}

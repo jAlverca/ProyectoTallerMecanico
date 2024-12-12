@@ -1,0 +1,38 @@
+{% extends "template.html" %}
+{% block content %}
+<h2 class="text-white">Agregar Usuarios</h2>
+<div class="booking-form-body">
+    <a href="/" class="btn btn-info">Volver</a>
+    <form id="form" class="custom-form booking-form" action="/person/save" method="POST" role="form">
+        <div class="booking-form-body">
+            <div class="row">
+                <div class="col-lg-6 col-12 mb-3">
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text" id="apellidos" name="apellidos" class="form-control" placeholder="Apellidos" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="nombres">Nombres:</label>
+                    <input type="text" id="nombres" name="nombres" class="form-control" placeholder="Nombres" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="identificacion">Identificación:</label>
+                    <input type="text" id="identificacion" name="identificacion" class="form-control" placeholder="Identificación" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" class="form-control" placeholder="Dirección" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Teléfono" required>
+                </div>
+                <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                    <button id="boton" type="submit" class="form-control btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
