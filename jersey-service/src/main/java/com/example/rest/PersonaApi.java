@@ -3,14 +3,16 @@ package com.example.rest;
 import java.util.HashMap;
 
 import controller.Dao.services.PersonaServices;
-import controller.tda.list.LinkedList;
+import models.Persona;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -90,60 +92,48 @@ public class PersonaApi {
 
     }
 
-    @Path("/update")
-    @POST
+    @Path("/update/{idPersona}")
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(HashMap map) {
-        HashMap res = new HashMap<>();
-
+    public Response updatePerson(@PathParam("idPersona") Integer idPersona, HashMap<String, Object> map) {
+        HashMap<String, Object> res = new HashMap<>();
+        PersonaServices ps = new PersonaServices();
         try {
-            PersonaServices ps = new PersonaServices();
-            ps.getPersona().setApellidos(map.get(("apellidos")).toString());
-            ps.getPersona().setNombres(map.get(("nombres")).toString());
-            ps.getPersona().setDireccion(map.get(("direccion")).toString());
-            ps.getPersona().setTelefono(map.get(("telefono")).toString());
-            ps.getPersona().setTipo(ps.getTipoIdentificacion(map.get("tipo").toString()));
+            Persona p = ps.get(idPersona);
+            ps.getPersona().setApellidos(map.get("apellidos").toString());
+            ps.getPersona().setNombres(map.get("nombres").toString());
+            ps.getPersona().setDireccion(map.get("direccion").toString());
+            ps.getPersona().setTelefono(map.get("telefono").toString());
             ps.getPersona().setIdentificacion(map.get("identificacion").toString());
             ps.update();
             res.put("msg", "OK");
-            res.put("data", "Persona editada correctamente");
-            return Response.ok(res).build();
+            res.put("data", "Persona actualizada correctamente");
 
+            return Response.ok(res).build();
         } catch (Exception e) {
-            System.out.println("Error en sav data " + e.toString());
-            res.put("msg", "Error");
-            res.put("data", e.toString());
+            res.put("msg", "ERROR");
+            res.put("data", "Error al actualizar la persona: " + e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
-
     }
 
-    @Path("/delete")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("unchecked")
+    @Path("/delete/{idPersona}")
+    @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(HashMap<String, Object> map) {
-        HashMap<String, Object> res = new HashMap<>();
-
+    public Response deletePerson(@PathParam("idPersona") Integer idPersona) {
+        HashMap res = new HashMap<>();
+        PersonaServices ps = new PersonaServices();
         try {
-            PersonaServices ps = new PersonaServices();
-            Integer id = Integer.parseInt(map.get("id").toString());
+            ps.delete(idPersona);
+            res.put("msg", "OK");
+            res.put("data", "Persona eliminada correctamente");
 
-            Boolean success = ps.delete(id);
-            if (success) {
-                res.put("msg", "Ok");
-                res.put("data", "Eliminado correctamente");
-                return Response.ok(res).build();
-            } else {
-                res.put("msg", "Error");
-                res.put("data", "Persona no encontrada");
-                return Response.status(Status.NOT_FOUND).entity(res).build();
-            }
+            return Response.ok(res).build();
         } catch (Exception e) {
-            System.out.println("Error en delete data" + e.toString());
-            res.put("msg", "Error");
-            res.put("data", e.toString());
+            res.put("msg", "ERROR");
+            res.put("data", "Error al eliminar la persona: " + e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }

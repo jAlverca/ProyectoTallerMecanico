@@ -19,6 +19,9 @@ public class PersonaServices {
         return obj.delete(id);
     }
     
+    public void merge(Persona persona, Integer id) throws Exception {
+        obj.merge(persona, id);
+    }
 
     public LinkedList<Persona> listAll(){
         return obj.getlistAll();

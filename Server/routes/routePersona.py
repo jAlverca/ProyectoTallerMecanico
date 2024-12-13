@@ -40,18 +40,13 @@ def save_person():
         flash('Error al guardar persona', category='error')
         return redirect('/')
     
-@routePersona.route('/person/register')
-def register():
-    r = requests.get("http://localhost:8086/api/person/list")
-    data = r.json()
-    return render_template('/persona/guardar.html', lista = data["data"])
-
-@routePersona.route('/person/edit/<int:id>', methods=['GET', 'POST'])
-def edit_person(id):
-    print(f"ID: {id}")
+@routePersona.route('/person/edit/<int:idPersona>', methods=['GET', 'POST'])
+def edit_person(idPersona):
+    print(request.method)
+    print(f"ID: {idPersona}")
     
     if request.method == 'GET':
-        r = requests.get(f"http://localhost:8086/api/person/get/{id}")
+        r = requests.get(f"http://localhost:8086/api/person/get/{idPersona}")
         if r.status_code == 200:
             try:
                 data = r.json()
@@ -73,28 +68,31 @@ def edit_person(id):
             "direccion": form["direccion"], 
             "telefono": form["telefono"]
         }
-        r = requests.put(f"http://localhost:8086/api/person/update/{id}", data=json.dumps(dataF), headers=headers)
+        r = requests.put(f"http://localhost:8086/api/person/update/{idPersona}", data=json.dumps(dataF), headers=headers)
         if r.status_code == 200:
             try:
                 dat = r.json()
                 print(dat)
-                print("Persona actualizada correctamente")
                 flash('Persona actualizada correctamente', category='info')
                 return redirect('/')
             except requests.exceptions.JSONDecodeError:
-                print("Error: la respuesta no es un JSON válido.")
                 flash('Error al actualizar persona', category='error')
                 return redirect('/')
         else:
+            print("Error al actualizar persona")
             flash('Error al actualizar persona', category='error')
             return redirect('/')
         
-@routePersona.route('/person/delete/<int:id>', methods=['POST'])
-def delete_person(id):
+@routePersona.route('/person/delete/<int:idPersona>', methods=['POST'])
+def delete_person(idPersona):
     headers = {'Content-Type': 'application/json'}
-    r = requests.delete(f"http://localhost:8086/api/person/delete/{id}", headers=headers)
+    r = requests.delete(f"http://localhost:8086/api/person/delete/{idPersona}", headers=headers)
     dat = r.json()
     if r.status_code == 200:
+        flash('Persona eliminada correctamente', category='info')
+        return redirect('/')
+    else:
+        flash('Error al eliminar persona', category='error')
         return redirect('/')
     
 

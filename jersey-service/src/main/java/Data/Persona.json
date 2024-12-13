@@ -9,15 +9,6 @@
         "tipo": "CEDULA"
     },
     {
-        "id": 2,
-        "apellidos": "Alverca Beltran",
-        "nombres": "Fernando Milton",
-        "direccion": "Cumbaratza",
-        "telefono": "0968295531",
-        "identificacion": "1400955405",
-        "tipo": "CEDULA"
-    },
-    {
         "id": 3,
         "apellidos": "Gomez Enrique",
         "nombres": "Luis Alberto",
