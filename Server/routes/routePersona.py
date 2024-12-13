@@ -1,5 +1,4 @@
-from flask import Blueprint, json, render_template, request, redirect, flash
-from flask import jsonify  # para el debug, opcional
+from flask import Blueprint, json, render_template, request, redirect, flash, jsonify
 import requests
 
 routePersona = Blueprint("routePersona", __name__)

@@ -32,15 +32,14 @@ def save_vehicle():
     }
     print("Data to send:", dataF)  
     r = requests.post("http://localhost:8086/api/vehicle/save", data=json.dumps(dataF), headers=headers)
-    print("Response status code:", r.status_code)  
-    print("Response data:", r.text)  
     if r.status_code == 200:
         flash('Vehículo guardado correctamente', category='info')
-        return redirect('/vehicle/list')
+        return redirect(f'/vehicle/list/{person_id}')
     else:
         flash('Error al guardar vehículo', category='error')
-        return redirect('/vehicle/list')
-
+        return redirect(f'/vehicle/list/{person_id}')
+    
+    
 @routeVehiculo.route('/vehicle/register/<int:person_id>', methods=['GET'])
 def register_vehicle(person_id):
     r = requests.get("http://localhost:8086/api/person/list")

@@ -5,28 +5,29 @@
 
     <div class="container">
         <div class="d-flex justify-content-between mb-4">
-            <a href="/vehicle/register/{{ person_id }}" class="btn btn-danger">Agregar Vehículos</a>
+            <a href="/order/register/{{ idVehiculo }}" class="btn btn-danger">Agregar Vehículos</a>
         </div>
 
         <table class="table table-dark table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Placa</th>
-                    <th>Color</th>
-                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Subtotal</th>
+                    <th>Iva</th>
+                    <th>Total</th>
+                    <th>NroOrder</th>
+                    
                 </tr>
             </thead>
             <tbody>
                 {% for valor in lista %}
                 
                 <tr>
-                    <td>{{ valor.marca}}</td>
-                    <td>{{ valor.modelo }}</td>
-                    <td>{{ valor.placa }}</td>
-                    <td>{{ valor.color }}</td>
-                    <td>{{ valor.descripcion }}</td> 
+                    <td>{{ valor.fecha}}</td>
+                    <td>{{ valor.subtotal }}</td>
+                    <td>{{ valor.iva }}</td>
+                    <td>{{ valor.total }}</td>
+                    <td>{{ valor.nroOrder }}</td> 
 
                     <td>
                 </tr>

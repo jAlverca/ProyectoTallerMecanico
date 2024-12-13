@@ -27,6 +27,9 @@ public class VehiculoApi {
         try {
             res.put("msg", "Ok");
             res.put("data", ps.listByPersonId(id).toArray());
+            if (ps.listByPersonId(id).isEmpty()) {
+                res.put("data", new Object[] {});
+            }
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("msg", "Error");

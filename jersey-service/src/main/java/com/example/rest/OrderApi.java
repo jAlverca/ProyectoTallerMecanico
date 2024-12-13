@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import controller.Dao.services.OrderServices;
 
+@Path("order")
 public class OrderApi {
     @Path("/list/{id}")
     @GET
@@ -29,6 +30,9 @@ public class OrderApi {
         try {
             res.put("msg", "Ok");
             res.put("data", ps.listByVehicleId(id).toArray());
+            if (ps.listByVehicleId(id).isEmpty()) {
+                res.put("data", new Object[] {});
+            }
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("msg", "Error");
@@ -51,8 +55,11 @@ public class OrderApi {
         map.put("msg", "OK");
         map.put("data", ps.getOrder());
         if (ps.getOrder().getId() == null) {
-            map.put("data", "No existe el Vehiculo con ese identificador");
+            map.put("data", "No existe el Order con ese identificador");
             return Response.status(Status.BAD_REQUEST).entity(map).build();
+        }
+        return Response.ok(map).build();
+    }
 
     @SuppressWarnings("rawtypes")
     @Path("/save")
@@ -65,9 +72,9 @@ public class OrderApi {
         String a = g.toJson(map);
 
         try {
-            if (map.get("idVehiculo") != null) {
+            if (map.get("idOrder") != null) {
                 OrderServices orderServices = new OrderServices();
-                orderServices.setOrder(orderServices.get(Integer.parseInt(map.get("idVehiculo").toString())));
+                orderServices.setOrder(orderServices.get(Integer.parseInt(map.get("idOrder").toString())));
                 if (orderServices.getOrder().getId() != null) {
                     OrderServices ps = new OrderServices();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -77,6 +84,7 @@ public class OrderApi {
                     ps.getOrder().setIva(Float.parseFloat(map.get("iva").toString()));
                     ps.getOrder().setTotal(Float.parseFloat(map.get("total").toString()));
                     ps.getOrder().setNroOrder(map.get("nOrder").toString());
+                    ps.getOrder().setIdTecnico(Integer.parseInt(map.get("idTecnico").toString()));
                     ps.getOrder().setIdVehiculo(orderServices.getOrder().getId());
                     ps.save(); 
                     res.put("msg", "OK");
