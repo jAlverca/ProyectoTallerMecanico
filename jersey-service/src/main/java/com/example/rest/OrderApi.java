@@ -23,8 +23,7 @@ public class OrderApi {
     @Path("/list/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listOrders(@PathParam("id") int id) 
-    {
+    public Response listOrders(@PathParam("id") int id) {
         HashMap<String, Object> res = new HashMap<>();
         OrderServices ps = new OrderServices();
         try {
@@ -36,8 +35,8 @@ public class OrderApi {
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("msg", "Error");
-            res.put("data", e.toString());
-            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
+            res.put("data", "Error al obtener las órdenes: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 
@@ -54,10 +53,6 @@ public class OrderApi {
         }
         map.put("msg", "OK");
         map.put("data", ps.getOrder());
-        if (ps.getOrder().getId() == null) {
-            map.put("data", "No existe el Order con ese identificador");
-            return Response.status(Status.BAD_REQUEST).entity(map).build();
-        }
         return Response.ok(map).build();
     }
 

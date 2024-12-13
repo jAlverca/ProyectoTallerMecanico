@@ -23,7 +23,7 @@ def save_vehicle():
     form = request.form
     person_id = session.get('person_id') 
     dataF = {
-        "idPersona": person_id,
+        "idVehiculo": person_id,
         "marca": form["marca"],
         "modelo": form["modelo"],
         "placa": form["placa"],
@@ -46,3 +46,15 @@ def register_vehicle(person_id):
     data = r.json()
     session['person_id'] = person_id  
     return render_template('/vehiculo/guardar.html', lista=data["data"], person_id=person_id)
+
+@routeVehiculo.route('/vehicle/delete/<int:idVehiculo>', methods=['POST'])
+def delete_person(idVehiculo):
+    headers = {'Content-Type': 'application/json'}
+    r = requests.delete(f"http://localhost:8086/api/vehicle/delete/{idVehiculo}", headers=headers)
+    dat = r.json()
+    if r.status_code == 200:
+        flash('Persona eliminada correctamente', category='info')
+        return redirect('/')
+    else:
+        flash('Error al eliminar persona', category='error')
+        return redirect('/')

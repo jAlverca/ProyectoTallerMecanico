@@ -44,22 +44,16 @@ public class PersonaServices {
         return obj.getTipoIdentificacion(tipo);
     }
 
-    @SuppressWarnings("rawtypes")
-    public LinkedList order(Integer type_order, String atributo) {
-        return obj.order(type_order, atributo);
-    }
-
-    public LinkedList<Persona> buscar_apellido(String texto) {
-        return obj.buscar_apellidos(texto);
-    }
-
-    public LinkedList<Persona> buscar_apellidos(String texto) {
-        return obj.buscar_apellidos(texto);
-    }
-    public Persona buscar_identificacion(String texto) {
-        return obj.buscar_identificacion(texto);
-    }
     public TipoIdentificacion[] getTipos() {
         return obj.getTipos();
+    }
+
+    public LinkedList<Persona> busquedaLinealBinaria(String atributo, String value) throws Exception {
+        return obj.busquedaLinealBinaria(atributo, value);
+    }
+
+    public LinkedList<Persona> mergeSort(Integer type_order, String atributo) throws Exception {
+        LinkedList<Persona> lista_ordenada = obj.mergeSort(type_order, atributo);
+        return lista_ordenada;
     }
 }

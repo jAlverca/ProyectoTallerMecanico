@@ -3,7 +3,7 @@ import requests
 
 routeOrder = Blueprint("routeOrder", __name__)
 
-@routeOrder.route('/vehicle/list/<int:idVehiculo>', methods=['GET'])
+@routeOrder.route('/order/list/<int:idVehiculo>', methods=['GET'])
 def list_vehicles(idVehiculo):
     try:
         r = requests.get(f"http://localhost:8086/api/order/list/{idVehiculo}")
@@ -11,8 +11,10 @@ def list_vehicles(idVehiculo):
         data = r.json()
         return render_template('/order/lista.html', lista=data["data"], idVehiculo=idVehiculo)
     except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
         return jsonify({"error": "Error en la respuesta del servidor"}), r.status_code
     except Exception as err:
+        print(f"Other error occurred: {err}")	
         return jsonify({"error": "Error en la respuesta del servidor"}), 500
 
 @routeOrder.route('/order/save', methods=['POST'])
@@ -37,9 +39,9 @@ def save_order():
         flash('Error al guardar vehículo', category='error')
         return redirect('/order/list')
 
-@routeOrder.route('/vehicle/register/<int:idVehiculo>', methods=['GET'])
+@routeOrder.route('/order/register/<int:idVehiculo>', methods=['GET'])
 def register_vehicle(idVehiculo):
-    r = requests.get("http://localhost:8086/api/person/list")
+    r = requests.get("http://localhost:8086/api/order/list")
     data = r.json()
     session['idVehiculo'] = idVehiculo  
     return render_template('/order/guardar.html', lista=data["data"], idVehiculo=idVehiculo)

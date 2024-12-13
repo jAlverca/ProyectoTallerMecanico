@@ -2,7 +2,7 @@ package com.example.rest;
 
 import java.util.HashMap;
 
-import controller.Dao.services.PersonaServices;
+import controller.Dao.services.VehiculoServices;
 import controller.Dao.services.VehiculoServices;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -70,10 +71,10 @@ public class VehiculoApi {
         String a = g.toJson(map);
 
         try {
-            if (map.get("idPersona") != null) {
-                PersonaServices personaServices = new PersonaServices();
-                personaServices.setPersona(personaServices.get(Integer.parseInt(map.get("idPersona").toString())));
-                if (personaServices.getPersona().getId() != null) {
+            if (map.get("idVehiculo") != null) {
+                VehiculoServices personaServices = new VehiculoServices();
+                personaServices.setVehiculo(personaServices.get(Integer.parseInt(map.get("idVehiculo").toString())));
+                if (personaServices.getVehiculo().getId() != null) {
                     VehiculoServices ps = new VehiculoServices();
                     ps.getVehiculo().setMarca(map.get("marca").toString());
                     ps.getVehiculo().setModelo(map.get("modelo").toString());
@@ -81,7 +82,7 @@ public class VehiculoApi {
                     ps.getVehiculo().setColor(map.get("color").toString());
                     ps.getVehiculo().setDescripcion(map.get("descripcion").toString());
                     ps.getVehiculo().setEstado(true);
-                    ps.getVehiculo().setIdPersona(personaServices.getPersona().getId());
+                    ps.getVehiculo().setIdPersona(personaServices.getVehiculo().getId());
                     ps.save();
                     res.put("msg", "OK");
                     res.put("data", "Vehiculo registrado correctamente");
@@ -118,9 +119,9 @@ public class VehiculoApi {
 
         try {
             if (map.get("person") != null) {
-                PersonaServices personaServices = new PersonaServices();
-                personaServices.setPersona(personaServices.get(Integer.parseInt(map.get("person").toString())));
-                if (personaServices.getPersona().getId() != null) {
+                VehiculoServices personaServices = new VehiculoServices();
+                personaServices.setVehiculo(personaServices.get(Integer.parseInt(map.get("person").toString())));
+                if (personaServices.getVehiculo().getId() != null) {
                     VehiculoServices ps = new VehiculoServices();
                     ps.getVehiculo().setMarca(map.get("marca").toString());
                     ps.getVehiculo().setModelo(map.get("modelo").toString());
@@ -128,7 +129,7 @@ public class VehiculoApi {
                     ps.getVehiculo().setColor(map.get("color").toString());
                     ps.getVehiculo().setDescripcion(map.get("descripcion").toString());
                     ps.getVehiculo().setEstado(true);
-                    ps.getVehiculo().setIdPersona(personaServices.getPersona().getId());
+                    ps.getVehiculo().setIdPersona(personaServices.getVehiculo().getId());
                     ps.update();
                     res.put("msg", "OK");
                     res.put("data", "Vehiculo registrada correctamente");
@@ -153,5 +154,25 @@ public class VehiculoApi {
             // TODO: handle exception
         }
 
+    }
+
+        @SuppressWarnings("unchecked")
+    @Path("/delete/{idVehiculo}")
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteVehicle(@PathParam("idVehiculo") Integer idVehiculo) {
+        HashMap res = new HashMap<>();
+        VehiculoServices ps = new VehiculoServices();
+        try {
+            ps.delete(idVehiculo);
+            res.put("msg", "OK");
+            res.put("data", "Vehiculo eliminada correctamente");
+
+            return Response.ok(res).build();
+        } catch (Exception e) {
+            res.put("msg", "ERROR");
+            res.put("data", "Error al eliminar la persona: " + e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
+        }
     }
 }
