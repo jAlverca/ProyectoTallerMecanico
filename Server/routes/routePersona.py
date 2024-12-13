@@ -52,24 +52,39 @@ def edit_person(id):
     
     if request.method == 'GET':
         r = requests.get(f"http://localhost:8086/api/person/get/{id}")
-        data = r.json()
-        print(data)
-        return render_template('/persona/editar.html', person = data["data"])
+        if r.status_code == 200:
+            try:
+                data = r.json()
+                print(data)
+                return render_template('/persona/editar.html', person=data["data"])
+            except requests.exceptions.JSONDecodeError:
+                flash('Error al obtener datos de la persona', category='error')
+                return redirect('/')
+        else:
+            flash('Error al obtener datos de la persona', category='error')
+            return redirect('/')
     else:
         headers = {'Content-Type': 'application/json'}
         form = request.form
         dataF = {
-             "apellidos":form["apellidos"], 
-             "nombres":form["nombres"], 
-             "identificacion":form["identificacion"], 
-             "direccion":form["direccion"], 
-             "telefono":form["telefono"]}
+            "apellidos": form["apellidos"], 
+            "nombres": form["nombres"], 
+            "identificacion": form["identificacion"], 
+            "direccion": form["direccion"], 
+            "telefono": form["telefono"]
+        }
         r = requests.put(f"http://localhost:8086/api/person/update/{id}", data=json.dumps(dataF), headers=headers)
-        dat = r.json()
-        print(dat)
         if r.status_code == 200:
-            flash('Persona actualizada correctamente', category='info')
-            return redirect('/')
+            try:
+                dat = r.json()
+                print(dat)
+                print("Persona actualizada correctamente")
+                flash('Persona actualizada correctamente', category='info')
+                return redirect('/')
+            except requests.exceptions.JSONDecodeError:
+                print("Error: la respuesta no es un JSON válido.")
+                flash('Error al actualizar persona', category='error')
+                return redirect('/')
         else:
             flash('Error al actualizar persona', category='error')
             return redirect('/')

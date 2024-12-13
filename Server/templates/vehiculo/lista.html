@@ -6,6 +6,8 @@
     <div class="container">
         <div class="d-flex justify-content-between mb-4">
             <a href="/vehicle/register/{{ person_id }}" class="btn btn-danger">Agregar Vehículos</a>
+            
+            <a href="/" class="btn btn-info">Volver</a>
         </div>
 
         <table class="table table-dark table-striped table-hover">
@@ -31,7 +33,6 @@
                     <td>
                         <a href="/order/list/{{ valor.id }}" class="btn btn-info">Ver Servicios</a>
                     </td>
-                    <td>
                 </tr>
                 {% endfor %}
             </tbody>
