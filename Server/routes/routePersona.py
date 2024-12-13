@@ -83,6 +83,12 @@ def edit_person(idPersona):
             flash('Error al actualizar persona', category='error')
             return redirect('/')
         
+@routePersona.route('/person/register')
+def register():
+    r = requests.get("http://localhost:8086/api/person/list")
+    data = r.json()
+    return render_template('/persona/guardar.html', lista = data["data"])
+        
 @routePersona.route('/person/delete/<int:idPersona>', methods=['POST'])
 def delete_person(idPersona):
     headers = {'Content-Type': 'application/json'}
