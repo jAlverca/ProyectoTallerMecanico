@@ -5,16 +5,16 @@ public class Cuenta {
     private String correo;
     private String clave;
     private Boolean estado;
-    private Persona id_persona;
+    private Integer id_persona;
 
     public Cuenta() {
     }
 
-    public Persona getId_persona() {
+    public Integer getId_persona() {
         return this.id_persona;
     }
 
-    public void setId_persona(Persona id_persona) {
+    public void setId_persona(Integer id_persona) {
         this.id_persona = id_persona;
     }
 

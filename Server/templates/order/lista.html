@@ -1,41 +1,43 @@
-{% extends 'template.html' %} 
+{% extends "template.html" %}
+
 {% block content %}
-<main class="text-white p-5 my-3">
-    <h1 class="h1 text-center mb-4">Lista de Vehículos</h1>
+<h1 class="h1 text-center mb-4">Lista de Ordenes</h1>
 
-    <div class="container">
-        <div class="d-flex justify-content-between mb-4">
-     <a href="/" class="btn btn-info">Volver</a>
-
-            <a href="/order/register/{{ idVehiculo }}" class="btn btn-danger">Agregar Vehículos</a>
-        </div>
-
-        <table class="table table-dark table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Fecha</th>
-                    <th>Subtotal</th>
-                    <th>Iva</th>
-                    <th>Total</th>
-                    <th>NroOrder</th>
-                    
-                </tr>
-            </thead>
-            <tbody>
-                {% for valor in lista %}
-                
-                <tr>
-                    <td>{{ valor.fecha}}</td>
-                    <td>{{ valor.subtotal }}</td>
-                    <td>{{ valor.iva }}</td>
-                    <td>{{ valor.total }}</td>
-                    <td>{{ valor.nroOrder }}</td> 
-
-                    <td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container">
+    <div class="d-flex justify-content-between mb-4">
+        <a href="/home" class="btn btn-info">Volver</a>
+        <a href="/order/register" class="btn btn-danger">Agregar Ordenes</a>
     </div>
-</main>
+
+    <table class="table table-dark table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Orden</th>
+                <th>Persona</th>
+                <th>Vehiculo</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for valor in lista %}
+            <tr>
+                <td>{{ valor.id }}</td>
+                <td>{{ valor.NroOrder }}</td>
+                {% if valor.vehiculo is string %}
+                <td colspan="2">{{ valor.vehiculo }}</td>
+                {% else %}
+                <td>{{ valor.vehiculo.persona.nombres }} {{ valor.vehiculo.persona.apellidos }}</td>
+                <td>{{ valor.vehiculo.vehiculo.marca }} {{ valor.vehiculo.vehiculo.modelo }}</td>
+                {% endif %}
+                <td>{{ valor.fecha }}</td>
+                <td>{{ valor.total }}</td>
+                <td><a href="/order/view/{{ valor.id}}" class="btn btn-success">Imprimir</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

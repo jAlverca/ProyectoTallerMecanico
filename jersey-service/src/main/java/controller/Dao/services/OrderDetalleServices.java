@@ -27,11 +27,17 @@ public class OrderDetalleServices {
         return obj.getOrderDetalle();
     }
 
-    public void setPersona( OrderDetalle orderDetalle){
+    public void setOrderDetalle( OrderDetalle orderDetalle){
         obj.setOrderDetalle(orderDetalle);
     }
 
     public OrderDetalle get(Integer id) throws Exception {
         return obj.get(id);
     }
+    public LinkedList<OrderDetalle> searchOrder(Integer id) {
+        return obj.searchOrder(id);
+        
+    }
+
+    
 }

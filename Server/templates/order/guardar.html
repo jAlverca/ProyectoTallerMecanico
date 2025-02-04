@@ -1,42 +1,188 @@
-{% extends "template.html" %}
-{% block content %}
-<h2 class="text-white">Agregar Usuarios</h2>
-<div class="booking-form-body">
-    <a href="/" class="btn btn-info">Volver</a>
-    <form id="form" class="custom-form booking-form" action="/order/save" method="POST" role="form">
-        <div class="booking-form-body">
-            <div class="row">
-                <div class="col-lg-6 col-12 mb-3">
-                </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    <label for="fecha">Fecha:</label>
-                    <input type="text" id="fecha" name="fecha" class="form-control" placeholder="Apellidos" required>
-                </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    <label for="subtotal">subtotal:</label>
-                    <input type="text" id="subtotal" name="subtotal" class="form-control" placeholder="Identificación" required>
-                </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    <label for="iva">Dirección:</label>
-                    <input type="text" id="iva" name="iva" class="form-control" placeholder="Dirección" required>
-                </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    <label for="total">total:</label>
-                    <input type="text" id="total" name="total" class="form-control" placeholder="Teléfono" required>
-                </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    <label for="nroOrder">nroOrder:</label>
-                    <input type="text" id="nroOrder" name="nroOrder" class="form-control" placeholder="Correo" required>
-                </div>
-                <div class="col-lg-6 col-12 mb-3">
-                    <label for="idTecnico">idTecnico:</label>
-                    <input type="text" id="idTecnico" name="idTecnico" class="form-control" placeholder="Correo" required>
-                </div>
+{% extends "template.html" %} 
 
-                    <button id="boton" type="submit" class="form-control btn btn-success">Guardar</button>
+{% block content %}
+<script>
+    $(document).ready(function () {
+        function crear_tabla(descripcion) {
+            var html = "";
+            var subtotal = 0.0;
+            var iva = 0.0;
+            var total = 0.0;
+            if (descripcion.length > 0) {
+                descripcion = descripcion.substring(0, descripcion.length - 1);
+                var res = descripcion.split(":");
+                for (var i = 0; i < res.length; i++) {
+                    var aux = res[i].split(",");
+                    subtotal += parseFloat(aux[2]) * parseFloat(aux[1]);
+                    html += "<tr>";
+                    html += "<td>" + aux[1] + "</td><td>" + aux[3] + "</td><td>" + aux[2] + "</td><td>" + (parseFloat(aux[2]) * parseFloat(aux[1])) + "</td>";
+                    html += "</tr>";
+                }
+                iva = subtotal * 0.15;
+                total = subtotal + iva;
+            } else {
+                html = "<tr><td colspan='4'>No hay datos</td></tr>";
+            }
+            $("#txtsubtotal").val("$" + subtotal.toFixed(2));
+            $("#txtiva").val("$" + iva.toFixed(2));
+            $("#txttotal").val("$" + total.toFixed(2));
+            return html;
+        }
+
+        function crear_input(data) {
+            var detalle = $("#txtdescripcion").val();
+            var resp = '';
+            if (detalle.length > 0) {
+                console.log("Detalle antes de agregar: " + detalle);
+                detalle = detalle.substring(0, detalle.length - 1);
+                var res = detalle.split(":");
+                var band = true;
+                for (var i = 0; i < res.length; i++) {
+                    var aux = res[i].split(",");
+                    if (aux[0] == data.codigo) { // Usa el código en lugar del ID
+                        aux[1] = (parseInt(aux[1], 10) + 1).toString(); // Asegúrate de que sea un entero
+                        band = false;
+                        resp += aux[0] + "," + aux[1] + "," + aux[2] + "," + aux[3] + ":";
+                    } else {
+                        resp += aux[0] + "," + aux[1] + "," + aux[2] + "," + aux[3] + ":";
+                    }
+                }
+                if (band) {
+                    resp += data.codigo + ",1," + data.pu + "," + data.nombre + ":"; // Usa el código en lugar del ID
+                }
+            } else {
+                resp = data.codigo + ",1," + data.pu + "," + data.nombre + ":"; // Usa el código en lugar del ID
+            }
+            console.log("Detalle después de agregar: " + resp);
+            return resp;
+        }
+
+        function buscar_servicio() {
+            var texto = $("#txtcode").val();
+            var url = "http://localhost:8086/api/services/code/" + texto;
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    console.log("Respuesta de la API:", data); // Agrega este log para verificar la respuesta de la API
+                    if (data.msg === "Ok") {
+                        var descripcion = crear_input(data.data);
+                        $("#txtdescripcion").val(descripcion);
+                        var tabla_html = crear_tabla(descripcion);
+                        console.log("Tabla HTML: " + tabla_html); // Agrega este log para verificar el HTML generado
+                        $("#table").html(tabla_html);
+                    } else {
+                        alert("No se encontró el servicio");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("No se encontró el servicio");
+                }
+            });
+        }
+
+        function search() {
+            var texto = $("#texto").val();
+            var vehicle = $("#vehicle");
+            vehicle.empty();
+            var url = "http://localhost:8086/api/person/list/search/ident/vehicle/" + texto;
+            var client = $("#client");
+            var cliente = $("#cliente");
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    console.log("Respuesta de la API:", data); // Agrega este log para verificar la respuesta de la API
+                    if (data.msg === "Ok") {
+                        client.val(data.data.id);
+                        cliente.val(data.data.nombre + " " + data.data.apellido);
+                        var html_vehicle = "";
+                        $.each(data.data.vehiculos, function (i, item) {
+                            html_vehicle += "<option value='" + item.id + "'>" + item.modelo + " " + item.marca + "</option>";
+                        });
+                        vehicle.html(html_vehicle);
+                    } else {
+                        client.val("");
+                        cliente.val("No existe el cliente");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    client.val("");
+                    cliente.val("No existe el cliente");
+                }
+            });
+        }
+
+        $("#btn").click(function () {
+            search();
+        });
+
+        $("#btncode").click(function () {
+            buscar_servicio();
+        });
+    });
+</script>
+<div class="pagetitle">
+    <a href="/order/list" class="btn btn-info">Volver</a>
+    <h1>REGISTRO DE ORDENES</h1>
+</div>
+
+<section class="section">
+    <div class="booking-form-body">
+        <a href="/order/list" class="btn btn-info">Volver</a>
+        <form id="order-form" class="custom-form booking-form" method="POST" action="/order/save" role="form">
+            <div class="booking-form-body">
+                <div class="row">
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label for="texto">Ingrese la cédula</label>
+                        <input id="texto" class="form-control" placeholder="Ingrese una cédula" />
+                        <a id="btn" class="btn btn-success mt-2">Buscar</a>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label for="cliente">Cliente</label>
+                        <input class="form-control" id="cliente" readonly />
+                        <input type="hidden" id="client" name="client" />
+                    </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label for="vehicle">Vehículo</label>
+                        <select class="form-control" id="vehicle" required name="vehiculo"></select>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label for="txtcode">Ingrese el código</label>
+                        <input id="txtcode" class="form-control" placeholder="Ingrese un código" />
+                        <input id="txtdescripcion" name="txtdescripcion" type="hidden" />
+                        <a id="btncode" class="btn btn-success mt-2">Buscar</a>
+                    </div>
+                    <div class="col-lg-12 col-12 mb-3">
+                        <table class="table table-dark table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>Nombre</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Precio Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table"></tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label><b>Subtotal:</b></label>
+                        <input readonly name="subtotal" id="txtsubtotal" class="form-control" value="$0.0">
+                    </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label><b>IVA:</b></label>
+                        <input readonly name="iva" id="txtiva" class="form-control" value="$0.0">
+                    </div>
+                    <div class="col-lg-6 col-12 mb-3">
+                        <label><b>Total:</b></label>
+                        <input readonly name="total" id="txttotal" class="form-control" value="$0.0">
+                    </div>
+                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                        <button type="submit" class="form-control btn btn-success">Guardar</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+</section>
+
 {% endblock %}

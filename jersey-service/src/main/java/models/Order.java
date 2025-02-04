@@ -9,7 +9,6 @@ public class Order {
     private Float iva;
     private Float total;
     private String nroOrder;
-    private Integer idTecnico;
     private Integer idVehiculo;
 
     public Order() {
@@ -61,14 +60,6 @@ public class Order {
 
     public void setNroOrder(String nroOrder) {
         this.nroOrder = nroOrder;
-    }
-
-    public Integer getIdTecnico() {
-        return this.idTecnico;
-    }
-
-    public void setIdTecnico(Integer idTecnico) {
-        this.idTecnico = idTecnico;
     }
 
     public Integer getIdVehiculo() {

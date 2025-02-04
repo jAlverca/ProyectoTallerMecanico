@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "nombre": "ChontaCruz",
+        "descripcion": "asfafsasf",
+        "pu": 50.34,
+        "pt": 40.34,
+        "codigo": "PC0001"
+    },
+    {
+        "id": 2,
+        "nombre": "Cambio de pastillas",
+        "descripcion": "Cambio de pastillas de freno",
+        "pu": 50.5,
+        "pt": 50.5,
+        "codigo": "PC0002"
+    },
+    {
+        "id": 3,
+        "nombre": "Reparacion de moto",
+        "descripcion": "Mantenimiento general de moto",
+        "pu": 1000.4,
+        "pt": 1000.4,
+        "codigo": "PC0003"
+    }
+]

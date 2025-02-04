@@ -1,0 +1,170 @@
+{% extends 'template.html' %} 
+{% block content %}
+
+<main class="text-white p-5 my-3">
+    <h1 class="h1 text-center mb-4">Lista de Clientes</h1>
+
+    <div class="container">
+        <div class="d-flex justify-content-between mb-4">
+            <a href="/home" class="btn btn-info">Volver</a>
+            <a href="/person/register" class="btn btn-danger">Agregar Clientes</a>
+        </div>
+
+    </div>
+    <div class="d-flex align-items-end">
+        <div class="me-2">
+            <label for="search-field" class="form-label">Buscar:</label>
+            <input type="text" id="search-field" class="form-control" placeholder="Buscar..." />
+        </div>
+        <div class="me-2">
+            <label for="search-attr" class="form-label">Atributo:</label>
+            <select id="search-attr" class="form-select">
+                <option value="cedula">Cédula</option>
+            </select>
+        </div>
+        <button class="btn btn-primary search-button">Buscar</button>
+    </div>
+</div>
+
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Direccion</th>
+                    <th>Teléfono</th>
+                    <th>Identificación</th>
+                    <th>Tipo</th>
+                    <th>Vehiculos</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for valor in lista %}
+                <tr>
+                    <td>{{ valor.nombres }}</td>
+                    <td>{{ valor.apellidos }}</td>
+                    <td>{{ valor.direccion }}</td>
+                    <td>{{ valor.telefono }}</td>
+                    <td>{{ valor.identificacion }}</td>
+                    <td>{{ valor.tipo }}</td>
+                    <td>
+                        <a href="/vehicle/list/{{ valor.id }}" class="btn btn-info">Ver Vehículos</a>
+                    </td>
+                    <td>
+                        <a href="/person/edit/{{ valor.id }}" class="btn btn-info">Modificar</a>
+                    </td>
+                    <td>
+                        <form action="/person/delete/{{ valor.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este inversionista?');">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+<script>
+    document.querySelectorAll(".sort-button").forEach((button) => {
+        button.addEventListener("click", function () {
+            const sortField = this.dataset.sortField;
+            let sortOrder = this.dataset.sortOrder;
+            this.dataset.sortOrder = sortOrder;
+
+            sortOrder = sortOrder === "0" ? "1" : "0";
+            this.dataset.sortOrder = sortOrder;
+
+            console.log(
+                "Atributo :",
+                sortField,
+                "Orden:",
+                sortOrder,
+                "Método :",
+                document.getElementById("sorting-method").value
+            );
+
+            fetch("/person/sort", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    sortField,
+                    sortOrder,
+                    sortMethod: document.getElementById("sorting-method").value,
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => updateTable(data))
+                .catch(console.error);
+        });
+    });
+
+    document
+        .querySelector(".search-button")
+        .addEventListener("click", function () {
+            const searchField = document.getElementById("search-field").value;
+            const searchAttr = document.getElementById("search-attr").value;
+
+            console.log(
+                "Campo de búsqueda:",
+                searchField,
+                "Atributo de búsqueda:",
+                searchAttr
+            );
+
+            fetch("/person/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                searchField: searchField,
+                searchAttr: searchAttr,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("Datos recibidos para búsqueda:", data);
+                
+                updateTable(data);
+            })
+            .catch(console.error);
+    });
+
+    function updateTable(data) {
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = '';
+
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+
+        if (data.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td colspan="7" class="text-center">No se encontraron resultados</td>';
+            tbody.appendChild(row);
+        } else {
+            data.forEach((valor) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${valor.nombres}</td>
+                    <td>${valor.apellidos}</td>
+                    <td>${valor.direccion}</td>
+                    <td>${valor.telefono}</td>
+                    <td>${valor.identificacion}</td>
+                    <td>${valor.tipo}</td>
+                    
+                    <td><a href="/vehicle/list/${valor.id}" class="btn btn-info">Ver Vehiculos</a></td>
+                    <td><a href="/person/edit/${valor.idPersona}" class="btn btn-info">Modificar</a></td>
+                    <td>
+                        <form action="/person/delete/${valor.id}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este inversionista?');">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+    }
+</script>
+
+{% endblock %}

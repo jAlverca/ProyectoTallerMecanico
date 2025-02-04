@@ -1,5 +1,7 @@
 package models;
 
+import java.util.HashMap;
+
 public class Persona{
     
     private Integer id;    
@@ -72,5 +74,17 @@ public class Persona{
     public String toString() {
         return apellidos+" "+nombres;
     };
+
+        public HashMap toHashMap() {
+        HashMap map = new HashMap();
+        map.put("id", id);
+        map.put("nombres", nombres);
+        map.put("apellidos", apellidos);
+        map.put("identificacion", identificacion);
+        map.put("telefono", telefono);
+        map.put("direccion", direccion);
+        map.put("tipo", tipo.toString());
+        return map;
+    }
 
 }

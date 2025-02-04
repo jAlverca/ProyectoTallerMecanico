@@ -8,7 +8,11 @@ def create_app():
         from routes.routePersona import routePersona
         from routes.routeVehiculo import routeVehiculo
         from routes.routeOrder import routeOrder
+        from routes.routeServices import routeServices
+        from routes.routeSesion import routeSesion
         app.register_blueprint(routePersona)
         app.register_blueprint(routeVehiculo)
         app.register_blueprint(routeOrder)
+        app.register_blueprint(routeServices)
+        app.register_blueprint(routeSesion)
     return app

@@ -80,4 +80,30 @@ public class VehiculoDao extends AdapterDao<Vehiculo> {
         return dao.getIdPersonaVehiculo(personId);
     }
 
+    public LinkedList<Vehiculo> buscar_persona(Integer id){
+        LinkedList<Vehiculo> lista = new LinkedList<>();
+        LinkedList<Vehiculo> listaVehiculos = listAll();
+        if(!listaVehiculos.isEmpty()){
+            Vehiculo[] aux = listaVehiculos.toArray();
+            for (int i = 0; i < aux.length; i++) {
+                if(aux[i].getIdPersona().intValue() == id.intValue()){
+                    lista.add(aux[i]);
+                }
+            }
+        }
+        return lista;
+    }
+
+    public Object getVehiculoPlaca(String string) {
+        LinkedList<Vehiculo> list = getlistAll();
+        if (!list.isEmpty()) {
+            Vehiculo[] aux = list.toArray();
+            for (int i = 0; i < aux.length; i++) {
+                if (aux[i].getPlaca().equals(string)) {
+                    return aux[i];
+                }
+            }
+        }
+        return null;
+    }
 }

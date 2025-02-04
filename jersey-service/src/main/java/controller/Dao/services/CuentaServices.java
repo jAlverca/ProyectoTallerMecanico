@@ -27,7 +27,7 @@ public class CuentaServices {
         return obj.getCuenta();
     }
 
-    public void setPersona( Cuenta cuenta){
+    public void setCuenta( Cuenta cuenta){
         obj.setCuenta(cuenta);
     }
 

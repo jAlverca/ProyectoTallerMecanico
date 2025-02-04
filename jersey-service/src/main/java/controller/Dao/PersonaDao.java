@@ -214,10 +214,52 @@ public class PersonaDao extends AdapterDao<Persona> {
         }
     }
 
-    // Metodo ShellSort para ordenar numeros
-
+    public Persona buscarIdentificacion(String texto){
+        Persona persona = null;
+        LinkedList<Persona> listita = listAll();
+        if(!listita.isEmpty()){
+            Persona[] aux = listita.toArray();
+            for(int i = 0; i < aux.length; i++){
+                if(aux[i].getIdentificacion().equalsIgnoreCase(texto)){
+                    persona = aux[i];
+                    break;
+                }
+            }
+        }
+        return persona;
+    }
     // Metodo de busqeuda binaria para cedula
-    public Persona busquedaBinaria(String attribute, String value) throws Exception {
+    public Persona busquedaBinaria(String identificacion) throws Exception {
+        LinkedList<Persona> listita = listAll();
+    
+        // Ordenar la lista por cedula usando el algoritmo de inserción
+        Persona[] aux = listita.toArray();
+        for (int i = 1; i < aux.length; i++) {
+            Persona key = aux[i];
+            int j = i - 1;
+            while (j >= 0 && aux[j].getIdentificacion().compareTo(key.getIdentificacion()) > 0) {
+                aux[j + 1] = aux[j];
+                j = j - 1;
+            }
+            aux[j + 1] = key;
+        }
+    
+        int low = 0;
+        int high = aux.length - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (aux[mid].getIdentificacion().equals(identificacion)) {
+                return aux[mid];
+            } else if (aux[mid].getIdentificacion().compareTo(identificacion) < 0) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return null;
+    }
+
+    public Persona busquedaBinaria1(String attribute, String value) throws Exception {
         LinkedList<Persona> listita = listAll();
 
         // Ordenar la lista por cedula usando el algoritmo de inserción
@@ -232,7 +274,7 @@ public class PersonaDao extends AdapterDao<Persona> {
             aux[j + 1] = key;
         }
 
-        int low = 0;    
+        int low = 0;
         int high = aux.length - 1;
         while (low <= high) {
             int mid = (low + high) / 2;
@@ -278,6 +320,7 @@ public class PersonaDao extends AdapterDao<Persona> {
         }
         return lista;
     }
+
 
 
 

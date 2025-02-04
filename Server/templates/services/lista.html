@@ -1,0 +1,48 @@
+{% extends 'template.html' %} 
+{% block content %}
+<main class="text-white p-5 my-3">
+    <h1 class="h1 text-center mb-4">Lista de Servicios</h1>
+
+    <div class="container">
+        <div class="d-flex justify-content-between mb-4">
+            <a href="/services/register" class="btn btn-danger">Agregar Servicios</a>
+            
+            <a href="/home" class="btn btn-info">Volver</a>
+        </div>
+
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Precio Unitario</th>
+                    <th>Precio Total</th>
+                    <th>Codigo</th>
+                    <th>Modificar</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for valor in lista %}
+           
+                <tr>
+                    <td>{{ valor.nombre}}</td>
+                    <td>{{ valor.descripcion }}</td>
+                    <td>{{ valor.pu }}</td>
+                    <td>{{ valor.pt }}</td>
+                    <td>{{ valor.codigo }}</td> 
+                    <td>
+                        <a href="/services/edit/{{ valor.id }}" class="btn btn-info">Modificar</a>
+                    </td>
+                    <td>
+                        <form action="/services/delete/{{ valor.id }}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este inversionista?');">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                        </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}

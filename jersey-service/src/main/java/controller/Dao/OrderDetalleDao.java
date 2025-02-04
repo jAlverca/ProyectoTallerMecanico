@@ -1,6 +1,8 @@
 package controller.Dao;
 
+import models.Order;
 import models.OrderDetalle;
+import models.Vehiculo;
 import controller.Dao.implement.AdapterDao;
 import controller.tda.list.LinkedList;
 
@@ -63,6 +65,22 @@ public class OrderDetalleDao extends AdapterDao<OrderDetalle> {
             System.out.println("OrderDetalle con id " + id + " no encontrada.");
             return false;
         }
+    }
+
+    public LinkedList<OrderDetalle> searchOrder(Integer id) {
+        LinkedList<OrderDetalle> list = new LinkedList<>();
+        LinkedList<OrderDetalle> listAll = getlistAll();
+        if (listAll != null && !listAll.isEmpty()) {
+            OrderDetalle[] aux = listAll.toArray();
+            for (int i = 0; i < aux.length; i++) {
+                if (aux[i].getIdOrder().intValue() == id.intValue()) {
+                    list.add(aux[i]);
+                }
+            }
+        } else {
+            System.out.println("Error: Lista de todas las órdenes vacía o nula");
+        }
+        return list;
     }
 
 }

@@ -70,8 +70,17 @@ public class PersonaApi {
         HashMap res = new HashMap<>();
         Gson g = new Gson();
         String a = g.toJson(map);
+        // Validar que no se repita la identificacion
+        PersonaServices ps = new PersonaServices();
+
         try {
-            PersonaServices ps = new PersonaServices();
+            Persona p = ps.buscarIdentificacion(map.get("identificacion").toString());
+            if (p != null) {
+                res.put("msg", "Error");
+                res.put("data", "Ya existe una persona con esa identificación");
+                return Response.status(Status.BAD_REQUEST).entity(res).build();
+            }
+
             ps.getPersona().setApellidos(map.get(("apellidos")).toString());
             ps.getPersona().setNombres(map.get(("nombres")).toString());
             ps.getPersona().setDireccion(map.get(("direccion")).toString());
@@ -96,40 +105,53 @@ public class PersonaApi {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updatePerson(@PathParam("idPersona") Integer idPersona, HashMap<String, Object> map) {
-        HashMap<String, Object> res = new HashMap<>();
+    public Response updatePerson(@PathParam("idPersona") Integer idPersona, HashMap map) {
+        HashMap res = new HashMap<>();
+        Gson g = new Gson();
+        String a = g.toJson(map);
         PersonaServices ps = new PersonaServices();
         try {
             Persona p = ps.get(idPersona);
-            ps.getPersona().setApellidos(map.get("apellidos").toString());
-            ps.getPersona().setNombres(map.get("nombres").toString());
-            ps.getPersona().setDireccion(map.get("direccion").toString());
-            ps.getPersona().setTelefono(map.get("telefono").toString());
-            ps.getPersona().setIdentificacion(map.get("identificacion").toString());
-            ps.update();
-            res.put("msg", "OK");
-            res.put("data", "Persona actualizada correctamente");
-
-            return Response.ok(res).build();
+            if (p != null) {
+                p.setApellidos(map.get("apellidos").toString());
+                p.setNombres(map.get("nombres").toString());
+                p.setDireccion(map.get("direccion").toString());
+                p.setTelefono(map.get("telefono").toString());
+                p.setIdentificacion(map.get("identificacion").toString());
+                ps.setPersona(p);
+                ps.merge(p, idPersona);
+                res.put("msg", "OK");
+                res.put("data", "Persona actualizada correctamente");
+                return Response.ok(res).build();
+            } else {
+                res.put("msg", "ERROR");
+                res.put("data", "Persona no encontrada");
+                return Response.status(Status.NOT_FOUND).entity(res).build();
+            }
         } catch (Exception e) {
+            e.printStackTrace(); 
             res.put("msg", "ERROR");
             res.put("data", "Error al actualizar la persona: " + e.getMessage());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Path("/delete/{idPersona}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletePerson(@PathParam("idPersona") Integer idPersona) {
-        HashMap res = new HashMap<>();
+        HashMap<String, Object> res = new HashMap<>();
         PersonaServices ps = new PersonaServices();
         try {
+            Persona p = ps.get(idPersona);
+            if (p == null) {
+                res.put("msg", "ERROR");
+                res.put("data", "Persona no encontrada");
+                return Response.status(Status.NOT_FOUND).entity(res).build();
+            }
             ps.delete(idPersona);
             res.put("msg", "OK");
             res.put("data", "Persona eliminada correctamente");
-
             return Response.ok(res).build();
         } catch (Exception e) {
             res.put("msg", "ERROR");
@@ -138,60 +160,47 @@ public class PersonaApi {
         }
     }
 
- /*   @SuppressWarnings("unchecked")
-    @Path("/list/search/{texto}")
+    @Path("/list/search/ident/vehicle/{texto}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPersonsLastName(@PathParam("texto") String texto) {
+    public Response buscar_persona(@PathParam("texto") String texto) throws Exception {
         HashMap map = new HashMap<>();
         PersonaServices ps = new PersonaServices();
         map.put("msg", "Ok");
-        LinkedList lista = ps.buscar_apellido(texto);
-        map.put("data", lista.toArray());
-        if (lista.isEmpty()) {
-            map.put("data", new Object[] {});
+        map.put("data", ps.buscar_identificacion_vehiculo(texto));
+        if (map.isEmpty()) {
+            map.put("msg", "No se encontró persona con ese identificador");
+            return Response.status(Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*").entity(map).build();
         }
-        return Response.ok(map).build();
+        return Response.ok(map).header("Access-Control-Allow-Origin", "*").build();
     }
 
-    @SuppressWarnings("unchecked")
-    @Path("/list/search/ident/{texto}")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Path("/search/{atributo}/{valor}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPersonsIdent(@PathParam("texto") String texto) {
+    public Response searchPerson(@PathParam("atributo") String atributo, @PathParam("valor") String valor) {
         HashMap map = new HashMap<>();
         PersonaServices ps = new PersonaServices();
-
-        map.put("msg", "Ok");
-        ps.setPersona(ps.buscar_identificacion(texto));
-        map.put("data", ps.getPersona());
-        if (ps.getPersona().getTipo() == null) {
-            map.put("data", "No existe la persona");
-            return Response.status(Status.NOT_FOUND).entity(map).build();
-        }
-        return Response.ok(map).build();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Path("/list/order/{attribute}/{type}")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPersonsLastName(@PathParam("attribute") String attribute, @PathParam("type") Integer type) {
-        HashMap map = new HashMap<>();
-        PersonaServices ps = new PersonaServices();
-        map.put("msg", "Ok");
         try {
-            // revisar el order
-            LinkedList lista = ps.order(type, attribute);
-            map.put("data", lista.toArray());
-            if (lista.isEmpty()) {
-                map.put("data", new Object[] {});
+
+            if (atributo.equals("cedula")) {
+                Persona p = ps.busquedaBinaria1(atributo, valor);
+                map.put("data", p.toHashMap());
+            } else {
+                
+
             }
+            map.put("msg", "OK");
+            map.put("data", map.get("data"));
+
+            return Response.ok(map).build();
         } catch (Exception e) {
-            // TODO handle exception
+            map.put("msg", "ERROR");
+            map.put("data", "Error al buscar la persona: " + e.toString());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).entity(map).build();
         }
 
-        return Response.ok(map).build();
-    }*/
+    }
 
 }

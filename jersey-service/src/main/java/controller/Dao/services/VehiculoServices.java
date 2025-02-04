@@ -39,4 +39,11 @@ public class VehiculoServices {
         return obj.listByPersonId(id);
     }
 
+    public LinkedList<Vehiculo> buscar_persona(Integer id) {
+        return obj.buscar_persona(id);
+    }
+    public Object getVehiculoPlaca(String string) {
+        return obj.getVehiculoPlaca(string);
+    }
+
 }

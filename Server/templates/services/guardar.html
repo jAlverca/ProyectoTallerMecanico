@@ -1,0 +1,36 @@
+{% extends "template.html" %}
+{% block content %}
+<h2 class="text-white">Agregar Usuarios</h2>
+<div class="booking-form-body">
+    <a href="/services/list" class="btn btn-info">Volver</a>
+    <form id="form" class="custom-form booking-form" action="/services/save" method="POST" role="form">
+        <div class="booking-form-body">
+            <div class="row">
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="nombre">Nombres:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombres" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="descripcion">Descripcion:</label>
+                    <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripcion" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="pu">Precio Unitario:</label>
+                    <input type="text" id="pu" name="pu" class="form-control" placeholder="Precio Unitario" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="pt">Precio Total:</label>
+                    <input type="text" id="pt" name="pt" class="form-control" placeholder="Precio Total" required>
+                </div>
+                <div class="col-lg-6 col-12 mb-3">
+                    <label for="codigo">Codigo:</label>
+                    <input type="text" id="codigo" name="codigo" class="form-control" placeholder="Codigo" required>
+                </div>
+                <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                    <button id="boton" type="submit" class="form-control btn btn-success">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

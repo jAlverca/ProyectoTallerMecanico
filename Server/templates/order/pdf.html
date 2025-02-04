@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura de Orden</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .header, .footer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .details, .totals {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .details th, .details td, .totals th, .totals td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .details th, .totals th {
+            background-color: #f4f4f4;
+        }
+        .details {
+            border-collapse: collapse;
+        }
+        .totals {
+            float: right;
+            width: 40%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Factura de Orden</h1>
+            <p>Fecha: {{ data.fecha }}</p>
+            <p>Número de Orden: {{ data.NroOrder }}</p>
+        </div>
+        <div class="details">
+            <h2>Detalles del Cliente</h2>
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <td>{{ data.vehiculo.persona.nombres }} {{ data.vehiculo.persona.apellidos }}</td>
+                </tr>
+                <tr>
+                    <th>Cédula</th>
+                    <td>{{ data.vehiculo.persona.identificacion }}</td>
+                </tr>
+                <tr>
+                    <th>Dirección</th>
+                    <td>{{ data.vehiculo.persona.direccion }}</td>
+                </tr>
+                <tr>
+                    <th>Teléfono</th>
+                    <td>{{ data.vehiculo.persona.telefono }}</td>
+                </tr>
+                <tr>
+                    <th>Vehículo</th>
+                    <td>{{ data.vehiculo.vehiculo.marca }} {{ data.vehiculo.vehiculo.modelo }}</td>
+                </tr>
+                <tr>
+                    <th>Placa</th>
+                    <td>{{ data.vehiculo.vehiculo.placa }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="details">
+            <h2>Detalles de los Servicios</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Nombre</th>
+                        <th>Precio Unitario</th>
+                        <th>Precio Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for servicio in data.descripcion %}
+                    <tr>
+                        <td>{{ servicio.cant }}</td>
+                        <td>{{ servicio.servicio.nombre }}</td>
+                        <td>{{ servicio.pu }}</td>
+                        <td>{{ servicio.pt }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="totals">
+            <table>
+                <tr>
+                    <th>Subtotal</th>
+                    <td>{{ data.subtotal }}</td>
+                </tr>
+                <tr>
+                    <th>IVA</th>
+                    <td>{{ data.iva }}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{ data.total }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="footer">
+            <p>Gracias por su compra</p>
+        </div>
+    </div>
+</body>
+</html>

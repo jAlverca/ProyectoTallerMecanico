@@ -27,11 +27,28 @@ public class ServicioServices {
         return obj.getServicio();
     }
 
-    public void setPersona( Servicio servicio){
+    public void setServicio( Servicio servicio){
         obj.setServicio(servicio);
     }
 
     public Servicio get(Integer id) throws Exception {
         return obj.get(id);
+    }
+
+    public Servicio getServicioCodigo(String code){
+        LinkedList<Servicio> list = obj.getlistAll();
+        Servicio servicio = null;
+        if(list.isEmpty()){
+            return servicio;
+        } else{
+            Servicio[] servicios = list.toArray();
+            for(int i = 0; i < servicios.length; i++){
+                if(servicios[i].getCodigo().equals(code)){
+                    servicio = servicios[i];
+                    break;
+                }
+            }
+        }
+        return servicio;
     }
 }

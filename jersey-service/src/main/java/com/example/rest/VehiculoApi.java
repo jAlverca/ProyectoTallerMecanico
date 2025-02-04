@@ -69,11 +69,11 @@ public class VehiculoApi {
         HashMap res = new HashMap<>();
         Gson g = new Gson();
         String a = g.toJson(map);
-
+    
         try {
-            if (map.get("idVehiculo") != null) {
+            if (map.get("idPersona") != null) {
                 VehiculoServices personaServices = new VehiculoServices();
-                personaServices.setVehiculo(personaServices.get(Integer.parseInt(map.get("idVehiculo").toString())));
+                personaServices.setVehiculo(personaServices.get(Integer.parseInt(map.get("idPersona").toString())));
                 if (personaServices.getVehiculo().getId() != null) {
                     VehiculoServices ps = new VehiculoServices();
                     ps.getVehiculo().setMarca(map.get("marca").toString());
@@ -111,16 +111,14 @@ public class VehiculoApi {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(HashMap map) {
-        // TODO
-        // VALIDATION ---- BAD REQUEST
         HashMap res = new HashMap<>();
         Gson g = new Gson();
         String a = g.toJson(map);
-
+    
         try {
-            if (map.get("person") != null) {
+            if (map.get("idPersona") != null) {
                 VehiculoServices personaServices = new VehiculoServices();
-                personaServices.setVehiculo(personaServices.get(Integer.parseInt(map.get("person").toString())));
+                personaServices.setVehiculo(personaServices.get(Integer.parseInt(map.get("idPersona").toString())));
                 if (personaServices.getVehiculo().getId() != null) {
                     VehiculoServices ps = new VehiculoServices();
                     ps.getVehiculo().setMarca(map.get("marca").toString());
@@ -132,29 +130,27 @@ public class VehiculoApi {
                     ps.getVehiculo().setIdPersona(personaServices.getVehiculo().getId());
                     ps.update();
                     res.put("msg", "OK");
-                    res.put("data", "Vehiculo registrada correctamente");
+                    res.put("data", "Vehiculo registrado correctamente");
                     return Response.ok(res).build();
                 } else {
                     res.put("msg", "Error");
                     res.put("data", "La persona no existe");
                     return Response.status(Status.BAD_REQUEST).entity(res).build();
                 }
-
             } else {
                 res.put("msg", "Error");
                 res.put("data", "Faltan datos");
                 return Response.status(Status.BAD_REQUEST).entity(res).build();
             }
-
         } catch (Exception e) {
             System.out.println("Error en sav data " + e.toString());
             res.put("msg", "Error");
             res.put("data", e.toString());
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity(res).build();
-            // TODO: handle exception
         }
-
     }
+
+    
 
         @SuppressWarnings("unchecked")
     @Path("/delete/{idVehiculo}")

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cuenta</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Registro de Cuenta</h2>
+        <div class="booking-form-body text-center p-4 rounded">
+            <a href="/person/list" class="btn btn-info mb-3">Volver</a>
+            <form id="form" class="custom-form booking-form" action="/account/save" method="POST" role="form">
+                <div class="form-group">
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo" name="correo" class="form-control" placeholder="Correo" required>
+                </div>
+                <div class="form-group">
+                    <label for="clave">Clave:</label>
+                    <input type="password" id="clave" name="clave" class="form-control" placeholder="Clave" required>
+                </div>
+                <div class="form-group">
+                    <label for="idPersona">ID Persona:</label>
+                    <input type="text" id="idPersona" name="idPersona" class="form-control" placeholder="ID Persona" required>
+                </div>
+                <div class="form-group">
+                    <button id="boton" type="submit" class="form-control btn btn-success">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('form');
+
+        form.addEventListener('submit', function(event) {
+            const correo = document.getElementById('correo').value;
+            const clave = document.getElementById('clave').value;
+            const idPersona = document.getElementById('idPersona').value;
+
+            if (!correo || !clave || !idPersona) {
+                event.preventDefault();
+                alert('Todos los campos son obligatorios');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ public class Servicio {
     private String descripcion;
     private Float pu;
     private Float pt;
+    private String codigo;
 
     public Servicio() {
     }
@@ -50,4 +51,11 @@ public class Servicio {
         this.pt = pt;
     }
 
+    public String getCodigo() {
+        return this.codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
 }

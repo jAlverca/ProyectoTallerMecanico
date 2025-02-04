@@ -23,19 +23,22 @@ def save_vehicle():
     form = request.form
     person_id = session.get('person_id') 
     dataF = {
-        "idVehiculo": person_id,
+        "idPersona": person_id,
         "marca": form["marca"],
         "modelo": form["modelo"],
         "placa": form["placa"],
         "color": form["color"],
         "descripcion": form["descripcion"]
+
     }
     print("Data to send:", dataF)  
     r = requests.post("http://localhost:8086/api/vehicle/save", data=json.dumps(dataF), headers=headers)
     if r.status_code == 200:
+        print("Vehículo guardado correctamente")
         flash('Vehículo guardado correctamente', category='info')
         return redirect(f'/vehicle/list/{person_id}')
     else:
+        print("Error:", r.json())
         flash('Error al guardar vehículo', category='error')
         return redirect(f'/vehicle/list/{person_id}')
     
@@ -47,6 +50,7 @@ def register_vehicle(person_id):
     session['person_id'] = person_id  
     return render_template('/vehiculo/guardar.html', lista=data["data"], person_id=person_id)
 
+
 @routeVehiculo.route('/vehicle/delete/<int:idVehiculo>', methods=['POST'])
 def delete_person(idVehiculo):
     headers = {'Content-Type': 'application/json'}
@@ -54,7 +58,7 @@ def delete_person(idVehiculo):
     dat = r.json()
     if r.status_code == 200:
         flash('Persona eliminada correctamente', category='info')
-        return redirect('/')
+        return redirect('/vehicle/list/<int:person_id>')
     else:
         flash('Error al eliminar persona', category='error')
-        return redirect('/')
+        return redirect('/vehicle/list/<int:person_id>')
